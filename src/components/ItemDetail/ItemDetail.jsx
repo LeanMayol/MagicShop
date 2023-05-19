@@ -1,6 +1,18 @@
 import "./itemdetail.css";
 import ItemCount from "../itemcount/itemcount";
 const ItemDetail = ({ id, name, img, description, category, price, stock }) => {
+  const [quantityAdded, setQuantityAdded] = useState(0);
+  const { addItem } = useContext(CartContext);
+  const handleOnAdd = (quantity) => {
+    setQuantityAdded(quantity);
+    const item = {
+      id,
+      name,
+      price,
+    };
+
+    addItem(item, quantity);
+  };
   return (
     <article className="card-item">
       <header className="Header">
@@ -15,11 +27,13 @@ const ItemDetail = ({ id, name, img, description, category, price, stock }) => {
         <p className="Info">Precio: {price}</p>
       </section>
       <footer className="ItemFooter">
-        <ItemCount
-          initial={1}
-          stock={5}
-          onAdd={(quantity) => console.log("Cantidad agregada", quantity)}
-        />
+        {quantityAdded > 0 ? (
+          <Link to="/cart" className="Option">
+            Terminar compra
+          </Link>
+        ) : (
+          <ItemCount initial={1} stock={stock} onAdd={handleOnAdd} />
+        )}
       </footer>
     </article>
   );
